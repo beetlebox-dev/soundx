@@ -3,7 +3,7 @@ from ferry import render_home_template, render_results_template
 from admin import admin_alert_thread
 
 
-# Copyright 2021 Johnathan Pennington | All rights reserved.
+# (c) 2022 Johnathan Pennington | All rights reserved.
 
 
 app = Flask(__name__)

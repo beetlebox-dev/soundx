@@ -10,7 +10,7 @@ from server_retrieval import Serve
 from admin import admin_alert_thread
 
 
-# Copyright 2021 Johnathan Pennington | All rights reserved.
+# (c) 2022 Johnathan Pennington | All rights reserved.
 
 
 ROUTES_API_KEY = os.getenv("ROUTES_API_KEY")
