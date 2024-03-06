@@ -10,6 +10,18 @@ class Blob:
     def open(self, mode):
         return open(self.file_path, mode)
 
+    def upload_from_filename(self, source_file_path):
+        with open(source_file_path, 'rb') as source_file:
+            source_file_bytes = source_file.read()
+        with self.open('wb') as destination_file:
+            destination_file.write(source_file_bytes)
+
+    def download_to_filename(self, destination_file_path):
+        with self.open('rb') as source_file:
+            source_file_bytes = source_file.read()
+        with open(destination_file_path, 'wb') as destination_file:
+            destination_file.write(source_file_bytes)
+
 
 class Bucket:
 

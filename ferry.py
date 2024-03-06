@@ -6,7 +6,7 @@ from threading import Thread
 from datetime import datetime
 from pytz import timezone
 from flask import render_template
-from server_retrieval import Serve
+from persist import Serve
 from admin import admin_alert_thread
 
 
@@ -15,6 +15,11 @@ from admin import admin_alert_thread
 
 ROUTES_API_KEY = os.getenv("ROUTES_API_KEY")
 WSDOT_API_KEY = os.getenv("WSDOT_API_KEY")
+
+STORE_BUCKET_NAME = 'webapps-362719_cloudbuild'
+STORE_TOP_FOLDER = 'site-data/'
+TEMP_TOP_FOLDER = 'UnUsEd_TeMp_FoLdEr/'
+
 
 ferry_data_thread = None
 
@@ -95,8 +100,8 @@ def render_results_template(origin, destination):
     if ferry_data_thread is not None:
         if ferry_data_thread.is_alive():
             ferry_data_thread.join(timeout=10.0)
-    serve = Serve()
-    ferry_data = serve.receive('ferrycache.json')
+    serve = Serve(STORE_BUCKET_NAME, STORE_TOP_FOLDER, TEMP_TOP_FOLDER)
+    ferry_data = serve.receive('ferrycache.json', 'store')
     # with open('ferrycache.json', 'r') as file:
     #     ferry_data = json.load(file)
 
@@ -132,8 +137,8 @@ def start_new_ferry_data_thread():
         if ferry_data_thread.is_alive():
             return
 
-    serve = Serve()
-    ferry_data = serve.receive('ferrycache.json')
+    serve = Serve(STORE_BUCKET_NAME, STORE_TOP_FOLDER, TEMP_TOP_FOLDER)
+    ferry_data = serve.receive('ferrycache.json', 'store')
     # with open('ferrycache.json', 'r') as file:
     #     ferry_data = json.load(file)
     if time.time() - ferry_data['cache timestamp'] < 180:  # If cache was updated less than 3 minutes ago.
@@ -381,8 +386,8 @@ Returns ferry data as dictionary. Returns 'error' if unable to get data from API
             f'MESSAGE: Could not get cache_flush_timestamp from API. Assuming cache should be updated...'
         )
 
-    serve = Serve()
-    json_data = serve.receive('ferrycache.json')
+    serve = Serve(STORE_BUCKET_NAME, STORE_TOP_FOLDER, TEMP_TOP_FOLDER)
+    json_data = serve.receive('ferrycache.json', 'store')
     # with open('ferrycache.json', 'r') as file:
     #     json_data = json.load(file)
 
@@ -458,7 +463,7 @@ Returns ferry data as dictionary. Returns 'error' if unable to get data from API
                     if schedules[terminal][route]['source'] == 'cache':
                         ferry_dict['cache timestamp'] = 0
 
-    serve.send('ferrycache.json', ferry_dict)
+    serve.send('ferrycache.json', ferry_dict, 'store')
     # with open('ferrycache.json', 'w') as file:
     #     json.dump(ferry_dict, file, indent=4)
 
