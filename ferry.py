@@ -6,8 +6,8 @@ from threading import Thread
 from datetime import datetime
 from pytz import timezone
 from flask import render_template
-from persist import Serve
-from admin import admin_alert_thread
+from beetlebox.persist import Serve
+from beetlebox.admin import admin_alert_thread
 
 
 # (c) 2022 Johnathan Pennington | All rights reserved.
