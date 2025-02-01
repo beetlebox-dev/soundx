@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect
 from ferry import render_home_template, render_results_template
-from admin import admin_alert_thread
+from beetlebox.admin import admin_alert_thread
 
 
 # (c) 2022 Johnathan Pennington | All rights reserved.
